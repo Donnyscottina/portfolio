@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orbit Survivor</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#05080d;color:#f4f7fa;font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+  html,body{min-height:100%;background:#090e15}
+  .wrap{width:100%;max-width:none;margin:0;padding:0}
+  .ogs-shell{overflow:hidden;border:0;border-radius:0;background:#090e15;color:#f4f7fa}
+  .ogs-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 14px 9px;border-bottom:1px solid rgba(255,255,255,.09);background:#0c121b}
+  .ogs-name{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+  .ogs-dot{width:7px;height:7px;border-radius:50%;background:#a7ff2f;box-shadow:0 0 14px rgba(167,255,47,.7)}
+  .ogs-stats{display:flex;gap:13px;flex-wrap:wrap;justify-content:flex-end;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#708096}
+  .ogs-stats b{margin-left:4px;color:#fff}
+  .ogs-xpwrap{height:5px;background:#111a25;border-bottom:1px solid rgba(255,255,255,.05)}
+  .ogs-xp{height:100%;width:0;background:#a7ff2f;box-shadow:0 0 10px rgba(167,255,47,.5);transition:width .14s linear}
+  .ogs-stage{position:relative;background:#080d13}
+  canvas{display:block;width:100%;height:auto;touch-action:none;cursor:crosshair}
+  .ogs-help{position:absolute;left:12px;bottom:12px;padding:7px 10px;border:1px solid rgba(255,255,255,.09);border-radius:8px;background:rgba(5,9,14,.72);backdrop-filter:blur(7px);font-size:10px;color:#8c9aae;pointer-events:none}
+  .ogs-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(4,8,12,.40);backdrop-filter:blur(3px)}
+  .hidden{display:none!important}
+  .ogs-card{width:min(350px,100%);padding:20px;border:1px solid rgba(255,255,255,.13);border-radius:16px;background:rgba(9,14,21,.95);text-align:center}
+  .ogs-card strong{display:block;margin-bottom:8px;font-size:21px}
+  .ogs-card p{margin:0 0 15px;font-size:12px;line-height:1.55;color:#8897aa}
+  .ogs-primary{min-height:42px;padding:0 20px;border:0;border-radius:10px;background:#a7ff2f;color:#071008;font-size:12px;font-weight:900;cursor:pointer}
+  .ogs-level{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(3,7,11,.66);backdrop-filter:blur(4px)}
+  .ogs-levelbox{width:min(690px,100%);padding:18px;border:1px solid rgba(167,255,47,.22);border-radius:16px;background:rgba(8,13,20,.97)}
+  .ogs-leveltitle{text-align:center;margin-bottom:14px}
+  .ogs-leveltitle b{display:block;font-size:18px;color:#a7ff2f}
+  .ogs-leveltitle span{font-size:10px;color:#77869b;text-transform:uppercase;letter-spacing:.12em}
+  .ogs-upgrades{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+  .ogs-upgrade{min-height:118px;padding:12px;text-align:left;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:#111923;color:#edf4fb;cursor:pointer}
+  .ogs-upgrade:hover{border-color:rgba(167,255,47,.55);background:#151f2a}
+  .ogs-upgrade strong{display:block;margin-bottom:6px;font-size:12px;color:#fff}
+  .ogs-upgrade span{display:block;font-size:10px;line-height:1.45;color:#8492a5}
+  .ogs-upgrade em{display:inline-block;margin-top:9px;font-size:9px;font-style:normal;font-weight:900;color:#a7ff2f;text-transform:uppercase;letter-spacing:.08em}
+  .ogs-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-top:1px solid rgba(255,255,255,.08);background:#0c121a}
+  .ogs-copy{font-size:10px;color:#728196}
+  .ogs-actions{display:flex;gap:6px;flex-shrink:0}
+  .ogs-btn{min-height:34px;padding:0 11px;border:1px solid rgba(255,255,255,.11);border-radius:8px;background:#141c27;color:#dce4eb;font-size:10px;font-weight:800;cursor:pointer}
+  @media(max-width:620px){.ogs-level{align-items:flex-start;overflow-y:auto}.ogs-upgrades{grid-template-columns:1fr}.ogs-upgrade{min-height:auto}.ogs-head{align-items:flex-start;flex-direction:column}.ogs-stats{justify-content:flex-start}.ogs-foot{align-items:flex-start;flex-direction:column}.ogs-actions{width:100%}.ogs-btn{flex:1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="orbit-survivor-app" class="ogs-shell">
+    <div class="ogs-head">
+      <div class="ogs-name"><span class="ogs-dot"></span> ORBIT SURVIVOR</div>
+      <div class="ogs-stats">
+        <span>УРОВЕНЬ <b id="ogs-level-num">1</b></span>
+        <span>СЧЁТ <b id="ogs-score">0</b></span>
+        <span>КОМБО <b id="ogs-combo">x1</b></span>
+        <span>ВОЛНА <b id="ogs-wave">1</b></span>
+        <span>ЯДРО <b id="ogs-hp">10</b></span>
+      </div>
+    </div>
+    <div class="ogs-xpwrap"><div class="ogs-xp" id="ogs-xp"></div></div>
+    <div class="ogs-stage">
+      <canvas id="ogs-canvas" width="900" height="520" tabindex="0"></canvas>
+      <div class="ogs-help">Води мышью вокруг ядра · опыт сам притягивается к шару</div>
+      <div class="ogs-overlay" id="ogs-overlay">
+        <div class="ogs-card">
+          <strong id="ogs-overlay-title">Orbit Survivor</strong>
+          <p id="ogs-overlay-text">Энергетическая сфера движется по орбите. Убивай дронов, собирай автоматически притягивающийся опыт и собирай билд.</p>
+          <button class="ogs-primary" id="ogs-start" type="button">Запустить</button>
+        </div>
+      </div>
+      <div class="ogs-level hidden" id="ogs-levelup">
+        <div class="ogs-levelbox">
+          <div class="ogs-leveltitle"><span>LEVEL UP</span><b>Выбери улучшение</b></div>
+          <div class="ogs-upgrades" id="ogs-upgrades"></div>
+        </div>
+      </div>
+    </div>
+    <div class="ogs-foot">
+      <div class="ogs-copy">Опыт постепенно летит к игроку; магнит ускоряет притяжение.</div>
+      <div class="ogs-actions">
+        <button class="ogs-btn" id="ogs-pause" type="button">Пауза</button>
+        <button class="ogs-btn" id="ogs-restart" type="button">↻ Заново</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(() => {
+const root=document.getElementById('orbit-survivor-app');if(!root||root.dataset.ready)return;root.dataset.ready='1';
+const canvas=root.querySelector('#ogs-canvas'),ctx=canvas.getContext('2d');
+const scoreEl=root.querySelector('#ogs-score'),comboEl=root.querySelector('#ogs-combo'),waveEl=root.querySelector('#ogs-wave'),hpEl=root.querySelector('#ogs-hp'),levelEl=root.querySelector('#ogs-level-num'),xpBar=root.querySelector('#ogs-xp');
+const overlay=root.querySelector('#ogs-overlay'),overlayTitle=root.querySelector('#ogs-overlay-title'),overlayText=root.querySelector('#ogs-overlay-text'),startBtn=root.querySelector('#ogs-start'),pauseBtn=root.querySelector('#ogs-pause'),restartBtn=root.querySelector('#ogs-restart'),levelUpPanel=root.querySelector('#ogs-levelup'),upgradesEl=root.querySelector('#ogs-upgrades');
+const W=canvas.width,H=canvas.height,CX=W/2,CY=H/2;
+const COL={bg:'#080d13',grid:'#14202d',grid2:'#101923',acid:'#a7ff2f',cyan:'#5ad8ff',violet:'#866cff',red:'#ff5d71',yellow:'#ffd45b',white:'#edf5ff'};
+let running=false,paused=false,choosingUpgrade=false,raf=0,last=0,time=0,score=0,hp=10,maxHp=10,wave=1,combo=1,comboTimer=0,spawnTimer=0,fireTimer=0,shake=0,level=1,xp=0,xpNeeded=18;
+const stats={fireDelay:.46,damage:1,projectiles:1,spread:.16,bulletSpeed:620,bulletSize:3.5,pierce:0,orbitRadius:96,pickupRadius:70,magnetPower:1,critChance:0,critMult:2,regen:0};
+const pointer={x:CX+200,y:CY,inside:false},player={x:CX+96,y:CY,angle:0,trail:[]};
+let enemies=[],bullets=[],particles=[],rings=[],gems=[],floaters=[];const stars=[];
+function rnd(a,b){return a+Math.random()*(b-a)}function clamp(v,a,b){return Math.max(a,Math.min(b,v))}function dist(ax,ay,bx,by){return Math.hypot(ax-bx,ay-by)}
+for(let i=0;i<85;i++)stars.push({x:Math.random()*W,y:Math.random()*H,s:rnd(.5,1.8),a:rnd(.15,.65)});
+function pointerPos(e){const r=canvas.getBoundingClientRect();pointer.x=(e.clientX-r.left)*W/r.width;pointer.y=(e.clientY-r.top)*H/r.height;pointer.inside=true}
+canvas.addEventListener('pointermove',pointerPos);canvas.addEventListener('pointerdown',e=>{pointerPos(e);if(!running)start()});canvas.addEventListener('pointerleave',()=>pointer.inside=false);
+function syncUI(){scoreEl.textContent=Math.floor(score);comboEl.textContent='x'+combo;waveEl.textContent=wave;hpEl.textContent=Math.max(0,Math.ceil(hp));levelEl.textContent=level;xpBar.style.width=Math.min(100,(xp/xpNeeded)*100)+'%'}
+function resetStats(){Object.assign(stats,{fireDelay:.46,damage:1,projectiles:1,spread:.16,bulletSpeed:620,bulletSize:3.5,pierce:0,orbitRadius:96,pickupRadius:70,magnetPower:1,critChance:0,critMult:2,regen:0})}
+function reset(){resetStats();time=0;score=0;hp=10;maxHp=10;wave=1;combo=1;comboTimer=0;spawnTimer=.6;fireTimer=.5;shake=0;level=1;xp=0;xpNeeded=18;enemies=[];bullets=[];particles=[];rings=[];gems=[];floaters=[];player.angle=0;player.x=CX+stats.orbitRadius;player.y=CY;player.trail=[];choosingUpgrade=false;levelUpPanel.classList.add('hidden');syncUI();draw()}
+function start(){cancelAnimationFrame(raf);reset();running=true;paused=false;pauseBtn.textContent='Пауза';overlay.classList.add('hidden');last=performance.now();raf=requestAnimationFrame(loop)}
+function endGame(){running=false;cancelAnimationFrame(raf);overlayTitle.textContent='Ядро уничтожено';overlayText.textContent=`Уровень ${level} · волна ${wave} · счёт ${Math.floor(score)}.`;startBtn.textContent='Ещё раз';overlay.classList.remove('hidden')}
+function burst(x,y,color,n=9,power=150){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=rnd(30,power);particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,t:rnd(.25,.55),life:.55,c:color,size:rnd(1.5,3.5)})}}
+function ring(x,y,color,max=55){rings.push({x,y,r:4,max,t:.35,life:.35,c:color})}
+function floater(x,y,text,color){floaters.push({x,y,text,c:color,t:.7,life:.7})}
+function spawnGem(x,y,value=1){gems.push({x,y,v:value,r:value>1?6:4,spin:rnd(0,6.28),vx:rnd(-30,30),vy:rnd(-30,30),age:0})}
+function spawnEnemy(){const side=Math.floor(Math.random()*4);let x,y;if(side===0){x=rnd(0,W);y=-35}else if(side===1){x=W+35;y=rnd(0,H)}else if(side===2){x=rnd(0,W);y=H+35}else{x=-35;y=rnd(0,H)}const elite=wave>=4&&Math.random()<Math.min(.24,wave*.022),r=elite?rnd(16,20):rnd(10,15),baseHp=1+Math.floor(wave/4),hv=elite?baseHp+3:baseHp,colors=[COL.violet,COL.cyan,COL.yellow];enemies.push({x,y,r,speed:rnd(46,64)+wave*5,hp:hv,maxHp:hv,angle:rnd(0,Math.PI*2),spin:rnd(-4.2,4.2),c:elite?COL.red:colors[Math.floor(Math.random()*colors.length)],elite})}
+function shoot(){const total=stats.projectiles,center=(total-1)/2;for(let i=0;i<total;i++){const a=player.angle+(i-center)*stats.spread,sx=player.x+Math.cos(a)*14,sy=player.y+Math.sin(a)*14;bullets.push({x:sx,y:sy,vx:Math.cos(a)*stats.bulletSpeed,vy:Math.sin(a)*stats.bulletSpeed,r:stats.bulletSize,life:1.5,damage:stats.damage,pierce:stats.pierce})}burst(player.x+Math.cos(player.angle)*14,player.y+Math.sin(player.angle)*14,COL.acid,3,55)}
+const upgradePool=[
+{id:'firerate',name:'Перегрев снят',desc:'Стрельба на 18% чаще.',tag:'СКОРОСТРЕЛЬНОСТЬ',apply:()=>stats.fireDelay=Math.max(.085,stats.fireDelay*.82)},
+{id:'multi',name:'Доп. ствол',desc:'Добавляет ещё один снаряд за залп.',tag:'+1 СНАРЯД',apply:()=>stats.projectiles=Math.min(7,stats.projectiles+1)},
+{id:'damage',name:'Перегрузка',desc:'Урон каждого попадания +1.',tag:'+ УРОН',apply:()=>stats.damage+=1},
+{id:'pierce',name:'Пробитие',desc:'Снаряд пробивает ещё одного врага.',tag:'ПРОБИТИЕ',apply:()=>stats.pierce=Math.min(4,stats.pierce+1)},
+{id:'size',name:'Тяжёлый заряд',desc:'Снаряды становятся крупнее.',tag:'РАЗМЕР',apply:()=>stats.bulletSize=Math.min(10,stats.bulletSize*1.22)},
+{id:'orbit',name:'Широкая орбита',desc:'Сфера держится дальше от ядра.',tag:'+ РАДИУС',apply:()=>stats.orbitRadius=Math.min(155,stats.orbitRadius+12)},
+{id:'magnet',name:'Магнитное поле',desc:'Опыт заметно быстрее летит к сфере.',tag:'МАГНИТ',apply:()=>{stats.pickupRadius=Math.min(260,stats.pickupRadius+45);stats.magnetPower=Math.min(3.5,stats.magnetPower+.45)}},
+{id:'crit',name:'Критическая масса',desc:'Шанс критического попадания +10%.',tag:'КРИТ',apply:()=>stats.critChance=Math.min(.5,stats.critChance+.10)},
+{id:'repair',name:'Ремонт ядра',desc:'Восстанавливает 3 HP и +1 максимум.',tag:'РЕМОНТ',apply:()=>{maxHp+=1;hp=Math.min(maxHp,hp+3)}},
+{id:'regen',name:'Саморемонт',desc:'Ядро медленно восстанавливает HP.',tag:'РЕГЕН',apply:()=>stats.regen+=.07}
+];
+function pickUpgrades(){const pool=[...upgradePool],r=[];while(r.length<3&&pool.length){const i=Math.floor(Math.random()*pool.length);r.push(pool.splice(i,1)[0])}return r}
+function showLevelUp(){choosingUpgrade=true;levelUpPanel.classList.remove('hidden');upgradesEl.innerHTML='';pickUpgrades().forEach(u=>{const btn=document.createElement('button');btn.type='button';btn.className='ogs-upgrade';btn.innerHTML=`<strong>${u.name}</strong><span>${u.desc}</span><em>${u.tag}</em>`;btn.addEventListener('click',()=>{u.apply();choosingUpgrade=false;levelUpPanel.classList.add('hidden');burst(player.x,player.y,COL.acid,18,210);ring(player.x,player.y,COL.acid,90);syncUI()});upgradesEl.appendChild(btn)})}
+function addXP(v){xp+=v;if(xp>=xpNeeded){xp-=xpNeeded;level++;xpNeeded=Math.floor(18+level*7+Math.pow(level,1.25)*2);showLevelUp()}}
+function updatePlayer(dt){const target=Math.atan2(pointer.y-CY,pointer.x-CX);let d=target-player.angle;while(d>Math.PI)d-=Math.PI*2;while(d<-Math.PI)d+=Math.PI*2;player.angle+=d*Math.min(1,dt*11);player.x=CX+Math.cos(player.angle)*stats.orbitRadius;player.y=CY+Math.sin(player.angle)*stats.orbitRadius;player.trail.unshift({x:player.x,y:player.y,a:1});if(player.trail.length>16)player.trail.pop();for(const t of player.trail)t.a*=.82}
+function killEnemy(e,bonus=1){e.dead=true;const gain=(e.elite?28:10)*combo*bonus;score+=gain;combo=clamp(combo+1,1,9);comboTimer=1.9;for(let i=0;i<(e.elite?3:1);i++)spawnGem(e.x+rnd(-7,7),e.y+rnd(-7,7),e.elite?2:1);burst(e.x,e.y,e.c,e.elite?20:10,e.elite?235:165);ring(e.x,e.y,e.c,e.elite?78:45);floater(e.x,e.y,'+'+Math.floor(gain),e.c);shake=Math.max(shake,e.elite?5:2)}
+function update(dt){
+  if(choosingUpgrade)return;
+  time+=dt;wave=1+Math.floor(time/14);score+=dt*(1.5+wave*.15);
+  if(stats.regen>0&&hp<maxHp)hp=Math.min(maxHp,hp+stats.regen*dt);
+  if(comboTimer>0){comboTimer-=dt;if(comboTimer<=0)combo=1}
+  updatePlayer(dt);
+  spawnTimer-=dt;if(spawnTimer<=0){spawnEnemy();if(wave>=6&&Math.random()<Math.min(.35,wave*.018))spawnEnemy();spawnTimer=Math.max(.20,.78-wave*.028)+rnd(0,.20)}
+  fireTimer-=dt;if(fireTimer<=0){shoot();fireTimer=stats.fireDelay}
+  for(const b of bullets){b.x+=b.vx*dt;b.y+=b.vy*dt;b.life-=dt}
+  for(const e of enemies){
+    e.angle+=e.spin*dt;
+    const d=Math.max(1,dist(e.x,e.y,CX,CY));
+    e.x+=(CX-e.x)/d*e.speed*dt;
+    e.y+=(CY-e.y)/d*e.speed*dt;
+    if(dist(e.x,e.y,player.x,player.y)<e.r+15){killEnemy(e,.7);continue}
+    if(d<27){e.dead=true;hp-=e.elite?2:1;combo=1;comboTimer=0;burst(e.x,e.y,COL.red,15,225);ring(CX,CY,COL.red,78);shake=Math.max(shake,7);if(hp<=0){hp=0;syncUI();endGame();return}}
+  }
+  for(const b of bullets){
+    if(b.dead)continue;
+    for(const e of enemies){
+      if(e.dead)continue;
+      if(dist(b.x,b.y,e.x,e.y)<b.r+e.r){
+        const crit=Math.random()<stats.critChance,dmg=b.damage*(crit?stats.critMult:1);
+        e.hp-=dmg;burst(b.x,b.y,crit?COL.yellow:e.c,crit?7:4,crit?130:90);
+        if(crit)floater(b.x,b.y,'CRIT',COL.yellow);
+        if(b.pierce>0)b.pierce--;else b.dead=true;
+        if(e.hp<=0)killEnemy(e);
+        if(b.dead)break;
+      }
+    }
+  }
+  enemies=enemies.filter(e=>!e.dead);
+  bullets=bullets.filter(b=>!b.dead&&b.life>0&&b.x>-50&&b.x<W+50&&b.y>-50&&b.y<H+50);
+
+  // Опыт: всегда медленно тянется к игроку, а в радиусе магнита резко ускоряется.
+  for(const g of gems){
+    g.age+=dt;g.spin+=dt*4;
+    g.x+=g.vx*dt;g.y+=g.vy*dt;
+    g.vx*=Math.pow(.07,dt);g.vy*=Math.pow(.07,dt);
+
+    const d=Math.max(1,dist(g.x,g.y,player.x,player.y));
+    const dx=(player.x-g.x)/d,dy=(player.y-g.y)/d;
+
+    const globalPull=(24+Math.min(45,g.age*6))*stats.magnetPower;
+    g.vx+=dx*globalPull*dt;
+    g.vy+=dy*globalPull*dt;
+
+    if(d<stats.pickupRadius){
+      const closePull=(180+(stats.pickupRadius-d)*5)*stats.magnetPower;
+      g.vx+=dx*closePull*dt;
+      g.vy+=dy*closePull*dt;
+    }
+
+    const maxSpeed=420*stats.magnetPower;
+    const spd=Math.hypot(g.vx,g.vy);
+    if(spd>maxSpeed){g.vx=g.vx/spd*maxSpeed;g.vy=g.vy/spd*maxSpeed}
+
+    if(d<18){g.dead=true;addXP(g.v);burst(g.x,g.y,COL.cyan,4,60)}
+  }
+  gems=gems.filter(g=>!g.dead);
+
+  for(const p of particles){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.965;p.vy*=.965;p.t-=dt}particles=particles.filter(p=>p.t>0);
+  for(const r of rings){r.t-=dt;r.r+=(r.max-r.r)*dt*9}rings=rings.filter(r=>r.t>0);
+  for(const f of floaters){f.y-=25*dt;f.t-=dt}floaters=floaters.filter(f=>f.t>0);
+  shake*=Math.pow(.02,dt);syncUI();
+}
+function drawGrid(){ctx.fillStyle=COL.bg;ctx.fillRect(0,0,W,H);for(const s of stars){ctx.globalAlpha=s.a*(.7+Math.sin(time*1.2+s.x)*.3);ctx.fillStyle=COL.white;ctx.fillRect(s.x,s.y,s.s,s.s)}ctx.globalAlpha=1;ctx.strokeStyle=COL.grid;ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<=W;x+=36){ctx.moveTo(x,0);ctx.lineTo(x,H)}for(let y=0;y<=H;y+=36){ctx.moveTo(0,y);ctx.lineTo(W,y)}ctx.stroke();ctx.strokeStyle=COL.grid2;ctx.beginPath();for(let x=0;x<=W;x+=180){ctx.moveTo(x,0);ctx.lineTo(x,H)}for(let y=0;y<=H;y+=180){ctx.moveTo(0,y);ctx.lineTo(W,y)}ctx.stroke()}
+function drawTriangle(x,y,r,angle,color){ctx.save();ctx.translate(x,y);ctx.rotate(angle+Math.PI/2);ctx.shadowBlur=22;ctx.shadowColor=color;ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(r,0);ctx.lineTo(-r*.72,-r*.72);ctx.lineTo(-r*.72,r*.72);ctx.closePath();ctx.fill();ctx.shadowBlur=0;ctx.fillStyle=COL.bg;ctx.beginPath();ctx.moveTo(r*.34,0);ctx.lineTo(-r*.3,-r*.27);ctx.lineTo(-r*.3,r*.27);ctx.closePath();ctx.fill();ctx.restore()}
+function drawCore(){const pulse=1+Math.sin(time*4.5)*.055;ctx.strokeStyle='rgba(255,255,255,.08)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(CX,CY,stats.orbitRadius,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.arc(CX,CY,156,0,Math.PI*2);ctx.stroke();ctx.save();ctx.shadowBlur=38;ctx.shadowColor=COL.violet;ctx.fillStyle=COL.violet;ctx.beginPath();ctx.arc(CX,CY,25*pulse,0,Math.PI*2);ctx.fill();ctx.shadowBlur=14;ctx.shadowColor='#fff';ctx.fillStyle='#e5dcff';ctx.beginPath();ctx.arc(CX,CY,9,0,Math.PI*2);ctx.fill();ctx.restore();const hpPct=hp/maxHp;ctx.strokeStyle='rgba(255,255,255,.08)';ctx.lineWidth=4;ctx.beginPath();ctx.arc(CX,CY,37,-Math.PI/2,Math.PI*1.5);ctx.stroke();ctx.strokeStyle=hpPct>.35?COL.acid:COL.red;ctx.beginPath();ctx.arc(CX,CY,37,-Math.PI/2,-Math.PI/2+Math.PI*2*hpPct);ctx.stroke()}
+function drawPlayer(){for(let i=player.trail.length-1;i>=0;i--){const t=player.trail[i];ctx.globalAlpha=t.a*.13;ctx.fillStyle=COL.acid;ctx.beginPath();ctx.arc(t.x,t.y,6+t.a*4,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1;ctx.strokeStyle='rgba(167,255,47,.16)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(player.x,player.y);ctx.stroke();const pulse=1+Math.sin(time*8)*.08;ctx.save();ctx.shadowBlur=26;ctx.shadowColor=COL.acid;ctx.fillStyle=COL.acid;ctx.beginPath();ctx.arc(player.x,player.y,12*pulse,0,Math.PI*2);ctx.fill();ctx.shadowBlur=10;ctx.shadowColor='#fff';ctx.fillStyle='#eaffd0';ctx.beginPath();ctx.arc(player.x-3,player.y-3,4,0,Math.PI*2);ctx.fill();ctx.restore()}
+function drawEnemies(){for(const e of enemies){drawTriangle(e.x,e.y,e.r,e.angle,e.c);if(e.elite){ctx.strokeStyle='rgba(255,93,113,.35)';ctx.beginPath();ctx.arc(e.x,e.y,e.r+8,0,Math.PI*2);ctx.stroke()}}}
+function drawBullets(){for(const b of bullets){ctx.save();ctx.shadowBlur=15;ctx.shadowColor=COL.acid;ctx.fillStyle=COL.acid;ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fill();ctx.restore()}}
+function drawGems(){for(const g of gems){ctx.save();ctx.translate(g.x,g.y);ctx.rotate(g.spin);ctx.shadowBlur=12;ctx.shadowColor=COL.cyan;ctx.fillStyle=COL.cyan;ctx.beginPath();ctx.moveTo(0,-g.r-2);ctx.lineTo(g.r,0);ctx.lineTo(0,g.r+2);ctx.lineTo(-g.r,0);ctx.closePath();ctx.fill();ctx.restore()}}
+function drawEffects(){for(const r of rings){ctx.globalAlpha=Math.max(0,r.t/r.life);ctx.strokeStyle=r.c;ctx.lineWidth=2;ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,Math.PI*2);ctx.stroke()}ctx.globalAlpha=1;for(const p of particles){ctx.globalAlpha=Math.max(0,p.t/p.life);ctx.fillStyle=p.c;ctx.fillRect(p.x-p.size/2,p.y-p.size/2,p.size,p.size)}ctx.globalAlpha=1;ctx.font='800 11px ui-sans-serif,system-ui';ctx.textAlign='center';for(const f of floaters){ctx.globalAlpha=Math.max(0,f.t/f.life);ctx.fillStyle=f.c;ctx.fillText(f.text,f.x,f.y)}ctx.globalAlpha=1}
+function drawCrosshair(){if(!pointer.inside)return;ctx.strokeStyle='rgba(167,255,47,.34)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(pointer.x,pointer.y,8,0,Math.PI*2);ctx.moveTo(pointer.x-13,pointer.y);ctx.lineTo(pointer.x+13,pointer.y);ctx.moveTo(pointer.x,pointer.y-13);ctx.lineTo(pointer.x,pointer.y+13);ctx.stroke()}
+function draw(){drawGrid();ctx.save();if(shake>.2)ctx.translate(rnd(-shake,shake),rnd(-shake,shake));drawCore();drawGems();drawEnemies();drawBullets();drawPlayer();drawEffects();ctx.restore();drawCrosshair()}
+function loop(now){if(!running)return;const dt=Math.min(.033,(now-last)/1000||0);last=now;if(!paused)update(dt);draw();if(running)raf=requestAnimationFrame(loop)}
+startBtn.addEventListener('click',start);restartBtn.addEventListener('click',start);pauseBtn.addEventListener('click',()=>{if(!running||choosingUpgrade)return;paused=!paused;pauseBtn.textContent=paused?'Продолжить':'Пауза'});document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!paused&&!choosingUpgrade){paused=true;pauseBtn.textContent='Продолжить'}});reset();
+})();
+</script>
+</body>
+</html>
