@@ -5,6 +5,74 @@ const video = (src, caption) => ({ type: "video", src, caption });
 
 const collections = [
   {
+    id: "warcraft-rts", kicker: "Рабочий прототип / RTS",
+    title: "RTS в духе Warcraft",
+    media: [
+      image("GameScreen/rts/iZq5d1mLn6mK9U1BRP0SiHZRSN3ohPdZv8oX7kGUM_VbDcVy3mfJmMalH2g2H44VvmSUBKwOsOAN44sfqMpcpq0lljyXow.jpg", "Исследование территории и Fog of War")
+    ]
+  },
+  {
+    id: "colony-builder", kicker: "Экономическая стратегия",
+    title: "Colony Builder",
+    media: [
+      image("GameScreen/симулятор колонии.jpg", "Развитие поселения и производство"),
+      image("GameScreen/небольшой симулятор колонии для рабочего стола.jpg", "Поселение, жители и ресурсы")
+    ]
+  },
+  {
+    id: "blacksmith", kicker: "Simulation / idle",
+    title: "Blacksmith Simulator",
+    media: [
+      image("GameScreen/кликер про кузнеца.jpg", "Clicker / management версия"),
+      image("GameScreen/Незавершенный кликер про кузнеца на юнити.jpg", "Рабочий прототип в Unity"),
+      video("видео/кликер про кузнеца для яндекс игр/123123.mp4", "Игровой процесс кузницы")
+    ]
+  },
+  {
+    id: "city-clicker", kicker: "Проект для Яндекс Игр",
+    title: "ГОРОД / City Clicker",
+    media: [
+      video("видео/Небольшая клиткер игра про город кликер и развитие города/YouCityRefactoring_SampleScene_1_WebGL_Unity_2021_3_8f1_Personal.mp4", "City Clicker — WebGL"),
+      video("видео/Небольшая клиткер игра про город кликер и развитие города/й.mp4", "Развитие города")
+    ]
+  },
+  {
+    id: "network-cars", kicker: "Multiplayer / procedural generation",
+    title: "skill & cars",
+    media: [
+      video("видео/игра про машинки для стим/Movie_008.mp4", "Автомобильная физика и игровой процесс"),
+      video("видео/игра про машинки для стим/декали.mp4", "Система декалей"),
+      video("видео/игра про машинки для стим/парралакс эффекть строений.mp4", "Параллакс окружения"),
+      video("видео/игра про машинки для стим/сложная трассса плюс разные препядствия.mp4", "Трасса и препятствия"),
+      video("видео/игра про машинки для стим/тестовая трасса + настройки машины.mp4", "Трасса и настройки автомобиля"),
+      video("видео/игра про машинки для стим/тестовая трасса и тест систем очкеов лидерства и т.д.mp4", "Игровой цикл и трасса")
+    ]
+  },
+  {
+    id: "valheim", kicker: "Моддинг и игровые системы",
+    title: "Valheim — моддинг и игровые системы",
+    media: [
+      video("видео вальхейм моды/Valheim/Valheim 2026.08.25 - 19.26.16.02.mp4", "Модификации и runtime-системы Valheim №1"),
+      video("видео вальхейм моды/Valheim/Valheim 2026.08.25 - 19.27.28.03.mp4", "Модификации и runtime-системы Valheim №2"),
+      video("видео вальхейм моды/Valheim/Valheim 2026.08.25 - 19.58.20.05.mp4", "Модификации и runtime-системы Valheim №3"),
+      video("видео вальхейм моды/Valheim/Valheim 2026.08.25 - 20.35.27.06.mp4", "Модификации и runtime-системы Valheim №4"),
+      video("видео вальхейм моды/Valheim/Valheim 2026.08.26 - 01.44.07.21.mp4", "Модификации и runtime-системы Valheim №5"),
+      video("видео вальхейм моды/Valheim/Valheim 2026.08.26 - 01.48.53.22.mp4", "Модификации и runtime-системы Valheim №6"),
+      video("видео вальхейм моды/Valheim/valheim-20260821-10332402_huikzNAL.mp4", "Модификации и runtime-системы Valheim №7")
+    ]
+  },
+  {
+    id: "factory", kicker: "Factory / automation",
+    title: "Factory / Automation",
+    media: [
+      video("видео/тест произвордительности и конвееров в юнити/Desktop 2024.04.01 - 11.27.48.01.mp4", "Конвейеры и автоматическая транспортировка"),
+      video("видео/тест произвордительности и конвееров в юнити/Desktop 2024.05.15 - 20.28.05.01.mp4", "Производительность автоматизированной системы")
+    ]
+  }
+];
+
+const prototypes = [
+  {
     id: "tamagotchi", category: "desktop", featured: true, kicker: "Игра для рабочего стола",
     title: "BITBUD — настольный компаньон",
     description: "Полноценный тамагочи с состояниями питомца, мини-играми, капсульным автоматом, редкостями и альбомом друзей.",
@@ -31,20 +99,6 @@ const collections = [
     ]
   },
   {
-    id: "cars", category: "game", kicker: "Игра для Steam",
-    title: "Автомобильная аркада",
-    description: "Физика машины, сложные трассы, препятствия, декали, параллакс окружения, очки и таблица лидеров.",
-    tags: ["Unity", "3D", "Физика", "Steam"],
-    media: [
-      video("видео/игра про машинки для стим/Movie_008.mp4", "Базовый игровой процесс"),
-      video("видео/игра про машинки для стим/декали.mp4", "Система декалей"),
-      video("видео/игра про машинки для стим/парралакс эффекть строений.mp4", "Параллакс-эффект строений"),
-      video("видео/игра про машинки для стим/сложная трассса плюс разные препядствия.mp4", "Сложная трасса и препятствия"),
-      video("видео/игра про машинки для стим/тестовая трасса + настройки машины.mp4", "Тестовая трасса и настройки машины"),
-      video("видео/игра про машинки для стим/тестовая трасса и тест систем очкеов лидерства и т.д.mp4", "Очки, лидерство и игровой цикл")
-    ]
-  },
-  {
     id: "survival-td", category: "systems", kicker: "Игровой прототип",
     title: "Выживание + tower defense",
     description: "Добыча ресурсов, защитные зоны, башни и противники с дальними атаками — несколько систем в одном прототипе.",
@@ -68,27 +122,6 @@ const collections = [
       image("GameScreen/баталии на рабочем столе.jpg", "Большие баталии на рабочем столе"),
       image("GameScreen/экранные крысы воришки курсора.jpg", "Крысы — воришки курсора"),
       image("GameScreen/мини рогалик для рабочего стола.jpg", "Компактный desktop-рогалик")
-    ]
-  },
-  {
-    id: "forge", category: "game", kicker: "Кликер / Яндекс Игры",
-    title: "Кузница",
-    description: "Кликер про кузнеца: производство, улучшения, развивающаяся мастерская и подготовка WebGL-сборки.",
-    tags: ["Unity", "WebGL", "Кликер"],
-    media: [
-      image("GameScreen/кликер про кузнеца.jpg", "Кузница и интерфейс улучшений"),
-      image("GameScreen/Незавершенный кликер про кузнеца на юнити.jpg", "Ранняя версия проекта в Unity"),
-      video("видео/кликер про кузнеца для яндекс игр/123123.mp4", "Игровой процесс версии для Яндекс Игр")
-    ]
-  },
-  {
-    id: "colonies", category: "desktop", kicker: "Симуляция",
-    title: "Пиксельные колонии",
-    description: "Небольшие симуляторы поселений: жители, ресурсы, здания, транспорт и развитие мира.",
-    tags: ["Unity", "Симулятор", "Pixel Art"],
-    media: [
-      image("GameScreen/небольшой симулятор колонии для рабочего стола.jpg", "Зимняя колония для рабочего стола"),
-      image("GameScreen/симулятор колонии.jpg", "Развитие поселения и производство")
     ]
   },
   {
@@ -144,18 +177,6 @@ const collections = [
 
 const labs = [
   {
-    id: "valheim", title: "Модификации Valheim", description: "Семь демонстраций модов, интерфейсов и изменений поведения игрового мира.",
-    media: [
-      video("видео вальхейм моды/Valheim/Valheim 2026.08.25 - 19.26.16.02.mp4", "Демонстрация Valheim №1"),
-      video("видео вальхейм моды/Valheim/Valheim 2026.08.25 - 19.27.28.03.mp4", "Демонстрация Valheim №2"),
-      video("видео вальхейм моды/Valheim/Valheim 2026.08.25 - 19.58.20.05.mp4", "Демонстрация Valheim №3"),
-      video("видео вальхейм моды/Valheim/Valheim 2026.08.25 - 20.35.27.06.mp4", "Демонстрация Valheim №4"),
-      video("видео вальхейм моды/Valheim/Valheim 2026.08.26 - 01.44.07.21.mp4", "Демонстрация Valheim №5"),
-      video("видео вальхейм моды/Valheim/Valheim 2026.08.26 - 01.48.53.22.mp4", "Демонстрация Valheim №6"),
-      video("видео вальхейм моды/Valheim/valheim-20260821-10332402_huikzNAL.mp4", "Демонстрация Valheim №7")
-    ]
-  },
-  {
     id: "generation", title: "Процедурная генерация", description: "Марширующие кубы, парящие острова с VFX-травой и коллапс волновой функции.",
     media: [
       video("видео/Воксели - марширующие кубы/Marching_Cubes_master_SampleScene_Windows,_Mac,_Linux_Unity_2021.mp4", "Воксели и marching cubes"),
@@ -171,13 +192,6 @@ const labs = [
     ]
   },
   {
-    id: "performance", title: "Производительность", description: "Два нагрузочных теста конвейеров и большого количества объектов в Unity.",
-    media: [
-      video("видео/тест произвордительности и конвееров в юнити/Desktop 2024.04.01 - 11.27.48.01.mp4", "Первый тест производительности"),
-      video("видео/тест произвордительности и конвееров в юнити/Desktop 2024.05.15 - 20.28.05.01.mp4", "Второй тест производительности")
-    ]
-  },
-  {
     id: "multiplayer-ai", title: "Сеть, AI и множество юнитов", description: "Мультиплеерный платформер и арена с поиском пути, толпой юнитов и цветовым шейдером.",
     media: [
       video("видео/мультиплеер копия айсклимбер/Desktop 2024.01.22 - 17.26.11.01.mp4", "Мультиплеер в духе Ice Climber"),
@@ -185,13 +199,11 @@ const labs = [
     ]
   },
   {
-    id: "small-experiments", title: "Небольшие игровые эксперименты", description: "Девять быстрых проверок идей — от погодного мода и настолки до ритм-шарика и наклона камеры.",
+    id: "small-experiments", title: "Небольшие игровые эксперименты", description: "Быстрые проверки идей — от погодного мода и настолки до ритм-шарика и наклона камеры.",
     media: [
       video("видео/майнкрафт джампер)/My_project_2_Game_Windows,_Mac,_Linux_Unity_2021_3_8f1_Personal.mp4", "Minecraft-джампер"),
       video("видео/мод для игры rusty че-то там добавляет погодные условия/rust.mp4", "Погодные условия в Rusty"),
       video("видео/нашествие уток балование с виндовс форм/Desktop 2024.06.21 - 14.20.48.01.mp4", "Нашествие уток и Windows Forms"),
-      video("видео/Небольшая клиткер игра про город кликер и развитие города/YouCityRefactoring_SampleScene_1_WebGL_Unity_2021_3_8f1_Personal.mp4", "Городской кликер — WebGL"),
-      video("видео/Небольшая клиткер игра про город кликер и развитие города/й.mp4", "Развитие города"),
       video("видео/перенос настолки на пк/й.mp4", "Перенос настольной игры на ПК"),
       video("видео/симулятор камня)/Rock_Симулятор_—_играть_онлайн_бесплатно_на_сервисе_Яндекс Игры.mp4", "Симулятор камня для Яндекс Игр"),
       video("видео/тестовый проект про шарик который играет песни)/Desktop 2023.12.08 - 14.58.54.06.mp4", "Шарик, который играет песни"),
@@ -207,7 +219,7 @@ const labs = [
   }
 ];
 
-const allCollections = [...collections, ...labs.map(item => ({ ...item, kicker: "Техническая лаборатория" }))];
+const allCollections = [...collections, ...prototypes, ...labs.map(item => ({ ...item, kicker: "Техническая лаборатория" }))];
 const sliderIndexes = {};
 
 const sites = [
@@ -230,8 +242,8 @@ function mediaPreview(item, title) {
   return `<img src="${posterFor(item.src)}" alt="Превью видео: ${title}" loading="lazy"><span class="play-mark">▶</span>`;
 }
 
-const projectCatalog = document.getElementById("project-catalog");
-projectCatalog.innerHTML = collections.map((project) => `
+const prototypeCatalog = document.getElementById("prototype-catalog");
+prototypeCatalog.innerHTML = prototypes.map((project) => `
   <article class="collection-card reveal ${project.featured ? "featured" : ""}" data-category="${project.category}">
     <div class="collection-cover media-slider" data-slider="${project.id}">
       <button class="slide-main media-open" data-collection="${project.id}" data-index="0"><span class="slider-visual">${mediaPreview(project.media[0], project.title)}</span></button>
@@ -293,7 +305,7 @@ document.getElementById("project-filters").addEventListener("click", (event) => 
   const button = event.target.closest("button");
   if (!button) return;
   document.querySelectorAll("#project-filters button").forEach(item => item.classList.toggle("active", item === button));
-  document.querySelectorAll(".collection-card").forEach(card => {
+  document.querySelectorAll(".primary-project").forEach(card => {
     card.hidden = button.dataset.filter !== "all" && card.dataset.category !== button.dataset.filter;
   });
 });
